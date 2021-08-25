@@ -1,0 +1,105 @@
+$button-background:#82a70c;
+$color-white: #ffffff;
+$bg-color: #f7f7f7;
+
+.main-content{
+    display: flex;
+    flex-direction: column;
+    min-height: calc(100vh - 80px);
+    background-color: $bg-color;
+    padding: 30px 0 10px;
+    box-sizing: border-box;
+    .emp-detail-text{
+        font: normal normal bold 24px/25px Roboto;
+        letter-spacing: 0px;
+        color: #42515f;
+        opacity: 1;
+        width: 80%;
+        margin: 0 auto;
+        .emp-count{
+            background-color: $button-background;
+            color: $color-white;
+            border-radius: 50%;
+            font-size: 20px;
+            width: 39px;
+            text-align: center;
+            display: inline-block;
+        }
+        .button-text {
+            float: right;
+            .add-button{
+                font: normal normal normal 22px/29px Roboto;
+                letter-spacing: 0px;
+                color: $color-white;
+                opacity: 1;
+                background-color: #82a70c;
+                border: none;
+                border-radius: 5px;
+                padding: 5px 15px;
+                outline: none;
+                text-decoration: none;
+            }   
+        }   
+    }    
+}
+
+.table-main{
+    width: 80%;
+    margin: 0 auto;
+    overflow: auto;
+    padding-top: 30px;
+    .table {
+        width: 100%;
+        border-collapse: separate;
+        min-width: 800px;
+        border-spacing: 0 0;
+        th{
+            background: #42515f 0% 0% no-repeat padding-box;
+            border-radius: 3px 3px 0px 0px;
+            text-align: left;
+            font: normal normal medium 18px/24px Roboto;
+            letter-spacing: 0px;
+            color: $color-white;
+            text-transform: uppercase;
+            opacity: 1;
+            border: 0px solid #dddddd;
+            td, th{
+                text-align: left;
+                padding: 5px 8px;
+            }           
+        }
+        tr:not(:first-child){
+            background: $color-white 0% 0% no-repeat padding-box;
+            border: 1px solid #e3e3e3;
+            border-radius: 3px;
+            td{
+                font:  normal normal normal 14px/20px Roboto;
+                letter-spacing: 0px;
+                color: #3d3d3d;
+                opacity: 1;
+                text-align: left;
+                td:first-child{
+                    display: flex;
+                    td img:first-child{
+                        margin-right: 10px;
+                        td img{
+                            cursor: pointer;
+                        }   
+                    }   
+                }    
+            }   
+        }
+    }
+}
+
+.dept-label{
+    background-color: #e9fea5;
+    border-radius: 40%;
+    width: fit-content;
+    padding: 1px 7px;
+    text-align: center;
+    font-size: 14px;
+    display: inline-block;
+    font-weight: 300px;
+    margin-top: 8px;
+}
