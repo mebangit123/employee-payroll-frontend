@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { Employee } from 'src/app/model/employee';
+import { PayrollService } from 'src/app/service/payroll.service';
 
 @Component({
   selector: 'app-home',
@@ -7,10 +9,23 @@ import { Component, OnInit } from '@angular/core';
 })
 export class HomeComponent implements OnInit {
 
-  public empCount: number = 10;
+  public employeeList: Employee[] = [];
 
-  constructor() { }
+  public empCount: number;
+
+  constructor(private payrollService: PayrollService) { }
 
   ngOnInit(): void {
+    this.payrollService.getEmployeeData().subscribe((response) => {
+      this.employeeList = response.data;
+      console.log(this.employeeList);
+      this.empCount = this.employeeList.length;
+    });
+  }
+  remove(id: number) {
+    console.log("delete Employee");
+  }
+  update(id: number, employee: any) {
+    console.log("update Employee");   
   }
 }

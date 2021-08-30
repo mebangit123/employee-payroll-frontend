@@ -17,18 +17,20 @@
                 <th>Start Date</th>
                 <th>Actions</th>
             </tr>
-            <tr>
+            <tr *ngFor= "let employee of employeeList">
                 <td>
-                    <img class="profile" src="../../assets/profile-images/Ellipse -1.png" alt="">
+                    <img class="profile" src="{{employee.profilePic}}" alt="">
                 </td>
-                <td>Meban</td>
-                <td>Male</td>
-                <td>HR</td>
-                <td>20000</td>
-                <td>23-03-2021</td>
+                <td>{{employee.name}}</td>
+                <td>{{employee.gender}}</td>
                 <td>
-                    <img id="" onclick="remove(this)" src="../assets/icons/delete-black-18dp.svg" alt="delete">
-                    <img id="" onclick="update(this)" src="../assets/icons/create-black-18dp.svg" alt="edit">
+                <div class="dept-label" *ngFor = "let department of employee.department">{{department}}</div>
+                </td>
+                <td>{{employee.salary}}</td>
+                <td>{{employee.startDate}}</td>
+                <td>
+                    <img id={{employee.employeeId}} (click)="remove(employee.employeeId)" src="../assets/icons/delete-black-18dp.svg" alt="delete">
+                    <img id={{employee.employeeId}} (click)="update(employee.employeeId, employee)" src="../assets/icons/create-black-18dp.svg" alt="update">
                 </td>
             </tr>
         </table>
