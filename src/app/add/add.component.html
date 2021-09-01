@@ -83,7 +83,7 @@
             <button mat-raised-button color="accent" class="resetButton button cancelButton">Cancel</button>
             </a>
             <div class="submit-reset">
-            <button mat-raised-button color="primary" type="submit" class="button submitButton">Submit</button>
+            <button mat-raised-button color="primary" type="submit" [disabled]="!addEmployeeForm.valid" class="button submitButton">Submit</button>
             <button mat-raised-button color="primary" type="reset" class="resetButton button">Reset</button>
             </div>
         </div>  

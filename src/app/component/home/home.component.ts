@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { Employee } from 'src/app/model/employee';
+import { DataService } from 'src/app/service/data.service';
 import { PayrollService } from 'src/app/service/payroll.service';
 
 @Component({
@@ -13,7 +15,7 @@ export class HomeComponent implements OnInit {
 
   public empCount: number;
 
-  constructor(private payrollService: PayrollService) { }
+  constructor(private payrollService: PayrollService, private dataService: DataService, private route: Router) { }
 
   ngOnInit(): void {
     this.payrollService.getEmployeeData().subscribe((response) => {
@@ -22,10 +24,24 @@ export class HomeComponent implements OnInit {
       this.empCount = this.employeeList.length;
     });
   }
+
+  /**
+   * Purpose: To delete employee data from the database.
+   * @param id The Id for the Employee to be delted.
+   */
   remove(id: number) {
-    console.log("delete Employee");
+    this.payrollService.deleteEmployeeData(id).subscribe(data=> {
+      console.log(data);
+      this.ngOnInit();      
+    });
   }
-  update(id: number, employee: any) {
-    console.log("update Employee");   
+  /**
+   * Purpose: To update Employee details from the database.
+   * @param id The Id for the Employee to be updated.
+   * @param employee Employee Object to be updated.
+   */
+  update(id: number, employee) {
+    this.dataService.changeEmployee(employee);
+    this.route.navigateByUrl('/update/'+id);
   }
 }

@@ -26,8 +26,8 @@
                 <td>
                 <div class="dept-label" *ngFor = "let department of employee.department">{{department}}</div>
                 </td>
-                <td>{{employee.salary}}</td>
-                <td>{{employee.startDate}}</td>
+                <td>{{employee.salary | currency: 'INR'}}</td>
+                <td>{{employee.startDate | date}}</td>
                 <td>
                     <img id={{employee.employeeId}} (click)="remove(employee.employeeId)" src="../assets/icons/delete-black-18dp.svg" alt="delete">
                     <img id={{employee.employeeId}} (click)="update(employee.employeeId, employee)" src="../assets/icons/create-black-18dp.svg" alt="update">

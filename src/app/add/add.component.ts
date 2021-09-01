@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { FormArray, FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Employee } from '../model/employee';
+import { DataService } from '../service/data.service';
 import { PayrollService } from '../service/payroll.service';
 
 @Component({
@@ -11,23 +13,26 @@ import { PayrollService } from '../service/payroll.service';
 })
 export class AddComponent implements OnInit {
 
+  isUpdate: boolean = false;
   employee: Employee = new Employee();
   sliderValue: number=0;
   addEmployeeForm: FormGroup = new FormGroup({});
 
   departments: any = [
-    { name: "HR", value:"HR", checked: false },
-    { name: "Sales", value:"Sales", checked: false },
-    { name: "Finamce", value:"Finance", checked: false },
+    { name: "HR",       value:"HR",       checked: false },
+    { name: "Sales",    value:"Sales",    checked: false },
+    { name: "Finance",  value:"Finance",  checked: false },
     { name: "Engineer", value:"Engineer", checked: false },
-    { name: "Others", value:"Others", checked: false }
+    { name: "Others",   value:"Others",   checked: false }
   ];
 
   constructor( 
+              private matSnack: MatSnackBar, 
               private activatedRoute: ActivatedRoute, 
               private formBuilder: FormBuilder, 
               private httpService: PayrollService,
-              private route: Router) { 
+              private route: Router,
+              private dataService: DataService) { 
     this.addEmployeeForm = this.formBuilder.group({
       name: new FormControl(''),
       salary: new FormControl(''),
@@ -40,6 +45,30 @@ export class AddComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    if(this.activatedRoute.snapshot.params.id != undefined) {
+      this.isUpdate = true;
+      this.dataService.currentEmployee.subscribe(employee => {
+       if(Object.keys(employee).length !== 0) { 
+          this.addEmployeeForm.patchValue({
+            name:employee.name,
+            profile:employee.profilePic,
+            gender:employee.gender,
+            salary:employee.salary,
+            date:employee.startDate,
+            notes:employee.note
+          });
+          const department: FormArray = this.addEmployeeForm.get('department') as FormArray;
+          employee.department.forEach(departmentElements => {
+            for ( let index = 0; index < this.departments.length; index++ ) {
+              if(this.departments[index].name == departmentElements) {
+                this.departments[index].checked = true;
+                department.push(new FormControl(this.departments[index].value));
+              }
+            }
+          })
+          }
+        });
+      }
     this.sliderValue=50000;
   }
   /**
@@ -53,17 +82,25 @@ export class AddComponent implements OnInit {
     this.employee.department=this.addEmployeeForm.get('department').value;
     this.employee.startDate=this.addEmployeeForm.get('date').value;
     this.employee.note=this.addEmployeeForm.get('notes').value;
-    this.httpService.addEmployeeData(this.employee).subscribe(resp => {
-      console.log(resp);
-    });
+    if(this.isUpdate) {
+      this.httpService.updateEmployeeData(this.activatedRoute.snapshot.params.id, this.employee).subscribe(resp => {
+        console.log(resp);
+      });
+    }else { 
+      this.httpService.addEmployeeData(this.employee).subscribe(resp => {
+        console.log(resp);
+      });
+    }
     this.route.navigateByUrl('/home');
   }
+  
   /** 
    * Purpose: To set salary value.
   */
   updateSetting(event) {
     this.sliderValue = event.value;
   }
+ 
   /**
   * @title Slider with custom thumb label formatting.
   */
@@ -73,6 +110,7 @@ export class AddComponent implements OnInit {
     }
     return value;
   }
+ 
   /**
   * Purpose: To get an array of checkbox value.
   * @param e The checkox event
