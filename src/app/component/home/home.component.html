@@ -18,14 +18,10 @@
                 <th>Actions</th>
             </tr>
             <tr *ngFor= "let employee of employeeList">
-                <td>
-                    <img class="profile" src="{{employee.profilePic}}" alt="">
-                </td>
+                <td><img class="profile" src="{{employee.profilePic}}" alt=""></td>
                 <td>{{employee.name}}</td>
                 <td>{{employee.gender}}</td>
-                <td>
-                <div class="dept-label" *ngFor = "let department of employee.department">{{department}}</div>
-                </td>
+                <td><div class="dept-label" *ngFor = "let department of employee.department">{{department}}</div></td>
                 <td>{{employee.salary | currency: 'INR'}}</td>
                 <td>{{employee.startDate | date}}</td>
                 <td>

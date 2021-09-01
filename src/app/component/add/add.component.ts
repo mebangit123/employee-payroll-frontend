@@ -2,9 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Employee } from '../model/employee';
-import { DataService } from '../service/data.service';
-import { PayrollService } from '../service/payroll.service';
+import { Employee } from 'src/app/model/employee';
+import { DataService } from 'src/app/service/data.service';
+import { PayrollService } from 'src/app/service/payroll.service';
 
 @Component({
   selector: 'app-add',
@@ -83,12 +83,23 @@ export class AddComponent implements OnInit {
     this.employee.startDate=this.addEmployeeForm.get('date').value;
     this.employee.note=this.addEmployeeForm.get('notes').value;
     if(this.isUpdate) {
-      this.httpService.updateEmployeeData(this.activatedRoute.snapshot.params.id, this.employee).subscribe(resp => {
-        console.log(resp);
+      this.httpService.updateEmployeeData(this.activatedRoute.snapshot.params.id, this.employee).subscribe(response => {
+        let message: any = "Employee Payroll Data Updated Successfull!!"
+        this.matSnack.open(message,'',{
+          duration:3000,
+          verticalPosition: 'top',
+          panelClass: ['green-snackbar']
+      })
+        console.log(response);
       });
     }else { 
-      this.httpService.addEmployeeData(this.employee).subscribe(resp => {
-        console.log(resp);
+      this.httpService.addEmployeeData(this.employee).subscribe(response => {
+        this.matSnack.open(response.message.toString(),'',{
+            duration:3000,
+            verticalPosition: 'top',
+            panelClass: ['green-snackbar']
+        })
+        console.log(response);
       });
     }
     this.route.navigateByUrl('/home');

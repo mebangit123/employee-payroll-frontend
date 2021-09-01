@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { Employee } from 'src/app/model/employee';
 import { DataService } from 'src/app/service/data.service';
@@ -15,7 +16,10 @@ export class HomeComponent implements OnInit {
 
   public empCount: number;
 
-  constructor(private payrollService: PayrollService, private dataService: DataService, private route: Router) { }
+  constructor(private payrollService: PayrollService, 
+              private dataService: DataService, 
+              private route: Router,
+              private matSnack: MatSnackBar) { }
 
   ngOnInit(): void {
     this.payrollService.getEmployeeData().subscribe((response) => {
@@ -30,8 +34,12 @@ export class HomeComponent implements OnInit {
    * @param id The Id for the Employee to be delted.
    */
   remove(id: number) {
-    this.payrollService.deleteEmployeeData(id).subscribe(data=> {
-      console.log(data);
+    this.payrollService.deleteEmployeeData(id).subscribe(response=> {
+      this.matSnack.open(response.message.toString(),'',{
+        duration:3000,
+        verticalPosition: 'top',
+        panelClass: ['green-snackbar']
+    })
       this.ngOnInit();      
     });
   }

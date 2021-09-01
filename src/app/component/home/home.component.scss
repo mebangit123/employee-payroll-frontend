@@ -82,11 +82,12 @@ $bg-color: #f7f7f7;
                     display: flex;
                     td img:first-child{
                         margin-right: 10px;
-                        td img{
-                            cursor: pointer;
-                        }   
+                           
                     }   
                 }    
+            }
+            td img{
+                cursor: pointer;
             }   
         }
     }
