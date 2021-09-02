@@ -35,13 +35,6 @@ export class AddComponent implements OnInit {
               private route: Router,
               private dataService: DataService) { 
     this.addEmployeeForm = this.formBuilder.group({
-      // name: new FormControl(''),
-      // salary: new FormControl(''),
-      // profile: new FormControl(''),
-      // gender: new FormControl(''),
-      // department: this.formBuilder.array([]),
-      // date: new FormControl(''),
-      // notes: new FormControl('')
       name: ['', Validators.compose([ Validators.required, Validators.pattern('^[A-Z]{1}[a-zA-Z\\s]{2,}$')])],
       salary: ['', Validators.compose([Validators.required, Validators.min(5000)])],
       profile: ['', Validators.required],
