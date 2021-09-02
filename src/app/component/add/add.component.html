@@ -7,6 +7,8 @@
             <mat-label class="label text">Full Name</mat-label> 
             <mat-form-field class="input" appearance="outline">
             <input matInput  formControlName="name" placeholder="Ex. Xyz">
+            <mat-error *ngIf="(this.addEmployeeForm.get('name').touched || this.addEmployeeForm.get('name').dirty) &&  this.addEmployeeForm.get('name').hasError('required')">Please enter Name..!</mat-error>
+            <mat-error *ngIf="this.addEmployeeForm.get('name').hasError('pattern')">Name is invalid</mat-error>
             </mat-form-field>
         </div>
         <!-- Profile Image input field -->
@@ -61,6 +63,9 @@
             </mat-slider>
             <span><b class="gridSizeValue">{{sliderValue.value}}</b></span>
         </div>
+        <div class="salary-error">
+            <mat-error *ngIf="this.addEmployeeForm.get('salary').hasError('min')">Min Salary should be more than 5000</mat-error>  
+        </div>
         <!-- StartDate input field -->
         <div class="row-content">
             <mat-label class="label text">Choose a date</mat-label>
@@ -83,7 +88,7 @@
             <button mat-raised-button color="accent" class="resetButton button cancelButton">Cancel</button>
             </a>
             <div class="submit-reset">
-            <button mat-raised-button color="primary" type="submit" [disabled]="!addEmployeeForm.valid" class="button submitButton">Submit</button>
+            <button mat-raised-button color="primary" type="submit" (click)="checkValidation()" class="button submitButton">Submit</button>
             <button mat-raised-button color="primary" type="reset" class="resetButton button">Reset</button>
             </div>
         </div>  

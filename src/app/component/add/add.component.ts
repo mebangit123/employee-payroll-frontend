@@ -13,9 +13,10 @@ import { PayrollService } from 'src/app/service/payroll.service';
 })
 export class AddComponent implements OnInit {
 
+  isInValid: boolean = false;
   isUpdate: boolean = false;
   employee: Employee = new Employee();
-  sliderValue: number=0;
+  sliderValue: number=50000;
   addEmployeeForm: FormGroup = new FormGroup({});
 
   departments: any = [
@@ -34,13 +35,20 @@ export class AddComponent implements OnInit {
               private route: Router,
               private dataService: DataService) { 
     this.addEmployeeForm = this.formBuilder.group({
-      name: new FormControl(''),
-      salary: new FormControl(''),
-      profile: new FormControl(''),
-      gender: new FormControl(''),
-      department: this.formBuilder.array([]),
-      date: new FormControl(''),
-      notes: new FormControl('')
+      // name: new FormControl(''),
+      // salary: new FormControl(''),
+      // profile: new FormControl(''),
+      // gender: new FormControl(''),
+      // department: this.formBuilder.array([]),
+      // date: new FormControl(''),
+      // notes: new FormControl('')
+      name: ['', Validators.compose([ Validators.required, Validators.pattern('^[A-Z]{1}[a-zA-Z\\s]{2,}$')])],
+      salary: ['', Validators.compose([Validators.required, Validators.min(5000)])],
+      profile: ['', Validators.required],
+      gender: ['', Validators.required],
+      department: this.formBuilder.array([],Validators.required),
+      date: ['', Validators.required],
+      notes: ['', Validators.required],
     })
   }
 
@@ -69,8 +77,46 @@ export class AddComponent implements OnInit {
           }
         });
       }
-    this.sliderValue=50000;
   }
+  /**
+   * Purpose: Check validation for input fields.
+   * @returns 
+   */
+  checkValidation() {
+    if(this.addEmployeeForm.get('profile').hasError('required')) {
+      this.isInValid = true;
+      this.openSnackBar("Select profile picture!")
+      return;
+    } else if(this.addEmployeeForm.get('gender').hasError('required')) {
+      this.isInValid = true;
+      this.openSnackBar("Select gender!")
+      return;
+    } else if(this.addEmployeeForm.get('department').hasError('required')) {
+      this.isInValid = true;
+      this.openSnackBar("Select department!")
+      return;
+    } else if(this.addEmployeeForm.get('salary').hasError('required')) {
+      this.isInValid = true;
+      this.openSnackBar("Select salary!")
+      return;
+    } else if(this.addEmployeeForm.get('date').hasError('required')) {
+      this.isInValid = true;
+      this.openSnackBar("Select Date!")
+      return;
+    }
+  } 
+  /**
+  * Purpose: To display Error message using Snackbar.
+  * @param message Error message
+  */
+  openSnackBar(message: string) {
+    this.matSnack.open(message,'',{
+      duration:3000,
+      verticalPosition: 'top',
+      panelClass: ['red-snackbar']
+  })
+  }
+
   /**
    * Purpose: To add Employee Payroll details to the database.
    */
@@ -82,29 +128,35 @@ export class AddComponent implements OnInit {
     this.employee.department=this.addEmployeeForm.get('department').value;
     this.employee.startDate=this.addEmployeeForm.get('date').value;
     this.employee.note=this.addEmployeeForm.get('notes').value;
-    if(this.isUpdate) {
-      this.httpService.updateEmployeeData(this.activatedRoute.snapshot.params.id, this.employee).subscribe(response => {
-        let message: any = "Employee Payroll Data Updated Successfull!!"
-        this.matSnack.open(message,'',{
-          duration:3000,
-          verticalPosition: 'top',
-          panelClass: ['green-snackbar']
-      })
-        console.log(response);
-      });
-    }else { 
-      this.httpService.addEmployeeData(this.employee).subscribe(response => {
-        this.matSnack.open(response.message.toString(),'',{
+    console.log(this.addEmployeeForm.value);
+    
+    if(!this.isInValid){
+      if(this.isUpdate) {
+        this.httpService.updateEmployeeData(this.activatedRoute.snapshot.params.id, this.employee).subscribe(response => {
+          let message: any = "Employee Payroll Data Updated Successfull!!"
+          this.matSnack.open(message,'',{
             duration:3000,
             verticalPosition: 'top',
             panelClass: ['green-snackbar']
         })
-        console.log(response);
-      });
+          console.log(response);
+        });
+      }else { 
+        this.httpService.addEmployeeData(this.employee).subscribe(response => {
+          this.matSnack.open(response.message.toString(),'',{
+              duration:3000,
+              verticalPosition: 'top',
+              panelClass: ['green-snackbar']
+          })
+          console.log(response);
+        });
+      }
+      this.route.navigateByUrl('/home');
+    } else {
+      return;
     }
-    this.route.navigateByUrl('/home');
   }
-  
+
   /** 
    * Purpose: To set salary value.
   */
